@@ -60,7 +60,7 @@ if response.status_code == 200:
     })
 
 with st.container(key="mango-btn"):
-    if st.button("Update Users", use_container_width=True):
+    if st.button("Update Customers", use_container_width=True):
         try:
             response = requests.get(f"{BACKEND_URL}/customer/get_customers")
             if response.status_code == 200:
