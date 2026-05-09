@@ -59,29 +59,5 @@ if response.status_code == 200:
         "11": "Updated By" 
     })
 
-with st.container(key="mango-btn"):
     if st.button("Update Customers", use_container_width=True):
-        try:
-            response = requests.get(f"{BACKEND_URL}/customer/get_customers")
-            if response.status_code == 200:
-                customers = response.json()['customers']
-                customers_df= pd.DataFrame(customers)
-                customers_df.drop(columns=[0], inplace=True)  # Drop the 'id' column for cleaner display
-                st.subheader("Interactive Table")
-                st.dataframe(customers_df,use_container_width=True,column_config={
-                    "1": "First Name",
-                    "2": "Last Name",
-                    "3": "Email",
-                    "4": "Calling Number",
-                    "5": "WhatsApp Number",
-                    "6": "Customer Type",
-                    "7": "Customer Mode",
-                    "8": "Created At",
-                    "9": "Updated At",
-                    "10": "Created By",
-                    "11": "Updated By" 
-                })
-            else:
-                st.error(f"Failed to retrieve customers: {response.text}")
-        except requests.exceptions.RequestException as e:
-            st.error(f"Error occurred: {e}")
+        st.switch_page("views/update_customers.py")
