@@ -78,7 +78,6 @@ if not st.session_state.logged_in:
     pg = st.navigation([login_page], position="hidden") 
 else:
     # Adding a global logout mechanism directly inside the sidebar header
-    st.sidebar.markdown("### 🥭 Portal Controls")
     if st.sidebar.button("Log Out", type="primary", use_container_width=True):
         st.session_state.token = None
         st.session_state.logged_in = False
