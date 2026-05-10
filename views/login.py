@@ -49,6 +49,9 @@ with center_col:
                         st.error("⚠️ Incorrect username or password.")
                     else:
                         st.error(f"Unexpected status received: {response.status_code}")
-                        
                 except requests.exceptions.ConnectionError:
                     st.error("💥 Server Unreachable: Ensure your local FastAPI server application is running on port 8000.")
+    register_button = st.button("Register New Admin", type="secondary", use_container_width=True)
+    if register_button:
+        st.switch_page("views/register_admin.py")
+        

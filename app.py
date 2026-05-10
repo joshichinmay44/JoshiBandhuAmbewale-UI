@@ -71,12 +71,12 @@ dash_page = st.Page("views/dashboard.py", title="Dashboard", icon="📊")
 inv_page = st.Page("views/inventory.py", title="Manage Inventory", icon="📦")
 customers_page = st.Page("views/customers.py", title="Customer Portal", icon="👥")
 update_customers_page = st.Page("views/update_customers.py", title="Update Customers", icon="✏️")
-
+registration_page = st.Page("views/register_admin.py", title="Register Admin", icon="📝")
 # (Keep your existing background configurations at the top of your app.py file)
 
 # Enforce route visualization mapping based on current login authentication checks
 if not st.session_state.logged_in:
-    pg = st.navigation([login_page], position="hidden") 
+    pg = st.navigation([login_page, registration_page], position="hidden")
 else:
     # Adding a global logout mechanism directly inside the sidebar header
     if st.sidebar.button("Log Out", type="primary", use_container_width=True):
