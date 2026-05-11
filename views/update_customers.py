@@ -66,5 +66,6 @@ if selected_rows:
                             raise Exception(f"API Error: {response.text}")
                         st.rerun()
                         del st.session_state["customer_selection"]
+            
                 except requests.exceptions.RequestException as e:
                         st.error(f"Error occurred: {e}")

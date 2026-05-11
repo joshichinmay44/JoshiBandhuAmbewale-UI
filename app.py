@@ -70,7 +70,7 @@ login_page = st.Page("views/login.py", title="Log In", icon="🔒")
 dash_page = st.Page("views/dashboard.py", title="Dashboard", icon="📊")
 inv_page = st.Page("views/inventory.py", title="Manage Inventory", icon="📦")
 customers_page = st.Page("views/customers.py", title="Customer Portal", icon="👥")
-update_customers_page = st.Page("views/update_customers.py", title="Update Customers", icon="✏️")
+update_customers_page = st.Page("views/update_customers.py", title="Update Customer", visibility="hidden", icon="✏️")
 registration_page = st.Page("views/register_admin.py", title="Register Admin", icon="📝")
 # (Keep your existing background configurations at the top of your app.py file)
 
@@ -87,8 +87,9 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [inv_page , dash_page, customers_page, update_customers_page]
+        "Admin Controls": [inv_page , dash_page, customers_page, update_customers_page],
     }, position="sidebar")
 
-pg.run()
+
+    pg.run()
 
