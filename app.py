@@ -6,7 +6,6 @@ st.set_page_config(page_title="जोशी बंधू आंबेवाल�
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
-
 # --- UTILITY: INJECT LOCAL BACKGROUND IMAGE WITH CSS ---
 def set_custom_background(image_path: str):
     try:
@@ -91,5 +90,5 @@ else:
     }, position="sidebar")
 
 
-    pg.run()
+pg.run()
 

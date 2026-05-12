@@ -1,6 +1,31 @@
 import streamlit as st
 import requests
 import pandas as pd
+from country_state_city import Country, State, City
+
+countries = Country.get_countries()
+country_names = {c.name: c for c in countries}
+
+def get_cities(country: dict, state: dict):
+    cities = City.get_cities_of_state(country.iso2,state.iso_code)
+    city_names = [c.name for c in cities]
+    return city_names
+
+def get_states(country: dict):
+    states = State.get_states_of_country(country.iso2)
+    state_names = {s.name: s for s in states}
+    return state_names
+
+def fetch_zip_codes(city :str):
+    try:
+        response = requests.get(f"{BACKEND_URL}/address/get_pin_codes/{city}")
+        if response.status_code == 200:
+            return response.json().get("pin_codes", [])
+        else:
+            raise Exception(f"Failed to fetch zip codes: {response.text}")
+    except Exception as e:
+        raise Exception(f"Error occurred while fetching zip codes: {e}")
+    
 
 BACKEND_URL = "http://127.0.0.1:8000"
 
@@ -8,7 +33,7 @@ response = requests.get(f"{BACKEND_URL}/customer/get_customers")
 if response.status_code == 200:
     customers = response.json()['customers']
     customers_df= pd.DataFrame(customers,columns=[
-        "id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode", "created_at", "updated_at", "created_by", "updated_by"
+        "id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode","country", "state", "city", "pincode", "street", "created_at", "updated_at", "created_by", "updated_by"
     ])
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Update Customer </h2>",unsafe_allow_html=True)
 st.write("---")
@@ -36,7 +61,22 @@ if selected_rows:
         # Reset edited_df on each new selection to avoid stale data issues
             st.session_state.edited_df = True
             edited_df = st.data_editor(
-                row_to_edit, 
+                row_to_edit,
+                column_config={
+                     "country" : st.column_config.Selectbox(
+                        "Country",
+                        options=list(country_names.keys()),
+                        default = "India"
+                    ),
+                     "state" : st.column_config.Selectbox(
+                        "State",
+                        options= get_states(country_names["India"]).keys(),
+                    ),
+                     "city" : st.column_config.Selectbox(
+                        "City",
+                        options=[]
+                    )
+                } ,
                 disabled=["id"], # Prevent the user from tampering with the primary key ID
                 hide_index=True,
                 key="customer_selection"

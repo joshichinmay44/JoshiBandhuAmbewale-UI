@@ -71,7 +71,12 @@ with st.form("add_customers_form"):
                 "phone_number_whatsapp": phone_number_whatsapp,
                 "customer_type": customer_type,
                 "customer_mode": customer_mode,
-                "created_by": created_by
+                "created_by": created_by,
+                "country": selected_country_name,
+                "state": selected_state_name,
+                "city": selected_city,
+                "pincode": str(pincode),
+                "street": f"{address_line_1}, {address_line_2}"
             }
             try:
                 response = requests.post(f"{BACKEND_URL}/customer/add_customer", json=payload)

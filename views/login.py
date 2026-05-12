@@ -4,6 +4,7 @@ import requests
 # FastAPI Backend Config
 BACKEND_URL = "http://127.0.0.1:8000"
 
+
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'>🥭 जोशी बंधू आंबेवाले 🥭</h2>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center; color: #6B1D1D  ;'>Administrator Portal</h3>", unsafe_allow_html=True)
 st.write("---")
