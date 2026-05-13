@@ -29,13 +29,20 @@ def set_custom_background(image_path: str):
                 border-radius: 12px !important;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
             }}
-            /* Target standard secondary buttons on hover */
-            .mango-btn div[data-testid="stBaseButton-secondary"]:hover {{
-                background-color: #f0f2f6 !important;
-                color: #31333F !important;
-                border-color: #ff4b4b !important;
-            }}
             
+            div.st-key-storm_box {{
+            background-color: #5C3D2E !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+            padding: 1.5rem !important;
+            }}
+
+            /* 4. Ensure item labels are crisp white */
+            div[role="radiogroup"] label {{
+                color: #ffffff !important;           
+                font-size: 1rem !important;
+            }}
+
             /* Target primary buttons on hover */
             .mango-btn div[data-testid="stBaseButton-primary"]:hover {{
                 background-color: #ff4b4b !important;
@@ -69,6 +76,7 @@ login_page = st.Page("views/login.py", title="Log In", icon="🔒")
 dash_page = st.Page("views/dashboard.py", title="Dashboard", icon="📊")
 inv_page = st.Page("views/inventory.py", title="Manage Inventory", icon="📦")
 customers_page = st.Page("views/customers.py", title="Customer Portal", icon="👥")
+new_customer_page = st.Page("views/new_customers.py", title="Add Customer",  visibility="hidden", icon="➕")
 update_customers_page = st.Page("views/update_customers.py", title="Update Customer", visibility="hidden", icon="✏️")
 registration_page = st.Page("views/register_admin.py", title="Register Admin", icon="📝")
 # (Keep your existing background configurations at the top of your app.py file)
@@ -86,7 +94,7 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [inv_page , dash_page, customers_page, update_customers_page],
+        "Admin Controls": [inv_page , dash_page, customers_page, new_customer_page, update_customers_page],
     }, position="sidebar")
 
 
