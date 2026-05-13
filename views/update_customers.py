@@ -6,6 +6,26 @@ import time
 
 BACKEND_URL = "http://127.0.0.1:8000"
 
+def get_customers():
+    try:
+        response = requests.get(f"{BACKEND_URL}/customer/get_customers")
+        if response.status_code == 200:
+            response = response.json().get("customers", [])
+            customers_df= pd.DataFrame(response,columns=[
+            "id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode","country", "state", "city", "pincode", "street", "created_at", "updated_at", "created_by", "updated_by"
+        ])
+            return customers_df
+        else:
+            raise Exception(f"Failed to fetch customers: {response.text}")
+    except Exception as e:
+        raise Exception(f"Error occurred while fetching customers: {e}")
+
+with st.spinner("Loading customer data..."):
+    customers_df = get_customers()
+        
+
+      # Initialize edited_df in session state to persist across interactions
+
 def fetch_zip_codes(city :str):
     try:
         response = requests.get(f"{BACKEND_URL}/address/get_pin_codes/{city}")
@@ -28,7 +48,7 @@ if "current_country" not in st.session_state:
 if "current_state" not in st.session_state:
     st.session_state.current_state = None
 if "current_city" not in st.session_state:
-    st.session_state.current_city = None
+    st.session_state.current_city =  None
 
 # --- PROCESS LIVE CASCADING LOGIC OUTSIDE FORM RESTRICTIONS ---
 # A. Get Active States matching chosen country
@@ -61,13 +81,7 @@ def send_update_request(payload):
     except Exception as e:
         st.error(f"Error occurred while updating customer: {e}")
 
-response = requests.get(f"{BACKEND_URL}/customer/get_customers")
-if response.status_code == 200:
-    customers = response.json()['customers']
-    customers_df= pd.DataFrame(customers,columns=[
-        "id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode","country", "state", "city", "pincode", "street", "created_at", "updated_at", "created_by", "updated_by"
-    ])
-    
+
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Update Customer </h2>",unsafe_allow_html=True)
 st.write("---")
 
@@ -75,10 +89,10 @@ st.session_state.edited_df = None  # Initialize edited_df in session state to pe
 
 st.markdown(f"<h3 style='text-align: center; color: #6B1D1D ;'> Select a Customer to Edit </h3>",unsafe_allow_html=True)
 selection = st.dataframe(
-    customers_df,
-    on_select="rerun",
-    selection_mode="single-row"
-)
+        customers_df,
+        on_select="rerun",
+        selection_mode="single-row"
+    )
 selected_rows = selection.selection.rows
 customers_df = customers_df[["id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode"]]
 if selected_rows:
@@ -123,7 +137,8 @@ if selected_rows:
                     options=state_options,
                     index=state_index,
                     disabled=not state_options,
-                    key="ui_state_node"
+                    key="ui_state_node",
+                    placeholder=st.session_state.current_state
                 )
                 # Check for direct update
                 if chosen_state != st.session_state.current_state:
@@ -138,7 +153,7 @@ if selected_rows:
                     options=city_options,
                     index=city_index,
                     disabled=not city_options,
-                    key="ui_city_node"
+                    key="ui_city_node",
                 )
                 if chosen_city != st.session_state.current_city:
                     st.session_state.current_city = chosen_city
@@ -174,6 +189,8 @@ if selected_rows:
                             "street": edited_df['street'].values[0]
                         }
                     send_update_request(payload)
+                    time.sleep(1)
+                    st.rerun()
             else:
                 st.session_state.edited_df = True
                 edited_df = st.data_editor(
@@ -182,7 +199,7 @@ if selected_rows:
                     hide_index=True,
                     key="customer_selection"
                 )
-                submit_button = st.button("Send Updates to API")
+                submit_button = st.button("Update Customer")
                 if submit_button:
                 # payload = edited_df.to_dict(orient='records')[0]
                     payload = {
@@ -202,7 +219,7 @@ if selected_rows:
                             "street": None
                     }
                     send_update_request(payload)
-    time.sleep(3)
-    st.rerun()
-        
+                    time.sleep(1)
+                    st.rerun()
+                        
         
