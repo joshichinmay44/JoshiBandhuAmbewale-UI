@@ -49,6 +49,18 @@ def set_custom_background(image_path: str):
                 color: white !important;
                 border-color: #ff4b4b !important;
             }}
+
+            .stSpinner > div > div {{
+            border-top-color: #FF4B4B !important;  /* Red wheel color */
+        }}
+        
+        /* 2. Change the text style, font size, and color */
+            .stSpinner p {{
+            color: #1E3A8A !important;             /* Dark blue font color */
+            font-size: 18px !important;            /* Larger text size */
+            font-weight: bold !important;          /* Bold font */
+            font-family: 'Courier New', monospace; /* Custom font family */
+        }}
             </style>
             """,
             unsafe_allow_html=True
@@ -74,11 +86,12 @@ set_custom_background("assets/logo.png")
 # Declare sub-page views targeting isolated python files inside the layout directory 
 login_page = st.Page("views/login.py", title="Log In", icon="🔒")
 dash_page = st.Page("views/dashboard.py", title="Dashboard", icon="📊")
-inv_page = st.Page("views/inventory.py", title="Manage Inventory", icon="📦")
+landing_page = st.Page("views/landing.py", title="Home", icon="📦")
 customers_page = st.Page("views/customers.py", title="Customer Portal", icon="👥")
 new_customer_page = st.Page("views/new_customers.py", title="Add Customer",  visibility="hidden", icon="➕")
 update_customers_page = st.Page("views/update_customers.py", title="Update Customer", visibility="hidden", icon="✏️")
 registration_page = st.Page("views/register_admin.py", title="Register Admin", icon="📝")
+new_vendors_page = st.Page("Views/new_vendors.py", title = "Add Vendor",  visibility = "hidden")
 # (Keep your existing background configurations at the top of your app.py file)
 
 # Enforce route visualization mapping based on current login authentication checks
@@ -94,7 +107,7 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [inv_page , dash_page, customers_page, new_customer_page, update_customers_page],
+        "Admin Controls": [landing_page , dash_page, customers_page, new_customer_page, update_customers_page, new_vendors_page],
     }, position="sidebar")
 
 

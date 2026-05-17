@@ -3,8 +3,12 @@ import requests
 import pandas as pd
 from country_state_city import Country, State, City
 import time
+from utils.common_util import circular_spinner, fetch_zip_codes, send_post_request
+import numpy as np
 
 BACKEND_URL = "http://127.0.0.1:8000"
+
+
 
 def get_customers():
     try:
@@ -19,24 +23,9 @@ def get_customers():
             raise Exception(f"Failed to fetch customers: {response.text}")
     except Exception as e:
         raise Exception(f"Error occurred while fetching customers: {e}")
-
-with st.spinner("Loading customer data..."):
-    customers_df = get_customers()
         
 
-      # Initialize edited_df in session state to persist across interactions
 
-def fetch_zip_codes(city :str):
-    try:
-        response = requests.get(f"{BACKEND_URL}/address/get_pin_codes/{city}")
-        if response.status_code == 200:
-            return response.json().get("pin_codes", [])
-            
-        else:
-            raise Exception(f"Failed to fetch zip codes: {response.text}")
-
-    except Exception as e:
-        raise Exception(f"Error occurred while fetching zip codes: {e}")
 # 1. Fetch baseline country data records once globally
 all_countries = Country.get_countries()
 country_map = {c.name: c.iso2 for c in all_countries}
@@ -71,30 +60,49 @@ if st.session_state.current_state and state_map:
 if st.session_state.current_city not in city_options:
     st.session_state.current_city = city_options[0] if city_options else None
 
-def send_update_request(payload):
-    try:
-        response = requests.post(f"{BACKEND_URL}/customer/update_customer", json=payload)
-        if response.status_code == 200:
-            st.success("Customer details updated successfully!")
-        else:
-            st.error(f"Failed to update customer: {response.text}")
-    except Exception as e:
-        st.error(f"Error occurred while updating customer: {e}")
-
 
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Update Customer </h2>",unsafe_allow_html=True)
 st.write("---")
 
+data_area = st.empty()
+
 st.session_state.edited_df = None  # Initialize edited_df in session state to persist across interactions
 
-st.markdown(f"<h3 style='text-align: center; color: #6B1D1D ;'> Select a Customer to Edit </h3>",unsafe_allow_html=True)
-selection = st.dataframe(
-        customers_df,
-        on_select="rerun",
-        selection_mode="single-row"
-    )
-selected_rows = selection.selection.rows
-customers_df = customers_df[["id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode"]]
+
+
+
+
+with data_area:
+    circular_spinner("Loading customers...")
+    time.sleep(3)
+    
+    customers_df = get_customers()
+    ROWS_PER_PAGE = 10
+    total_rows = len(customers_df)
+    max_pages = int(np.ceil(total_rows / ROWS_PER_PAGE))
+    if max_pages > 1:
+        page_number = st.slider(
+            "Select Page", 
+            min_value=1, 
+            max_value=max_pages, 
+            value=1
+        )
+    else:
+        page_number = 1
+    start_idx = (page_number - 1) * ROWS_PER_PAGE
+    end_idx = start_idx + ROWS_PER_PAGE
+    
+
+    # 5. Slice and display the data
+    paginated_df = customers_df.iloc[start_idx:end_idx]
+    st.markdown(f"<h3 style='text-align: center; color: #6B1D1D ;'> Select a Customer to Edit </h3>",unsafe_allow_html=True)
+    selection = st.dataframe(
+            customers_df,
+            on_select="rerun",
+            selection_mode="single-row"
+        )
+    selected_rows = selection.selection.rows
+    customers_df = customers_df[["id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode"]]
 if selected_rows:
     selected_idx = selected_rows[0]
     # Extract the single row as a new DataFrame for editing
@@ -188,9 +196,12 @@ if selected_rows:
                             "pincode": str(edited_df['pincode'].values[0]),
                             "street": edited_df['street'].values[0]
                         }
-                    send_update_request(payload)
-                    time.sleep(1)
-                    st.rerun()
+                    res = send_post_request('/customer/update_customer',payload)
+                    if res == 200:
+                        time.sleep(1)
+                        st.rerun()
+                    else :
+                        st.error ("Could not update customer")
             else:
                 st.session_state.edited_df = True
                 edited_df = st.data_editor(
@@ -218,8 +229,11 @@ if selected_rows:
                             "pincode": None,
                             "street": None
                     }
-                    send_update_request(payload)
-                    time.sleep(1)
-                    st.rerun()
-                        
+                    res = send_post_request('/customer/update_customer',payload)
+                    if res == 200:
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.error("Could not update customer")
+                            
         

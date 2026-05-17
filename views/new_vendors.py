@@ -2,11 +2,9 @@ import streamlit as st
 import requests
 import pandas as pd
 from country_state_city import Country, State, City
-from utils.common_util import fetch_zip_codes, send_post_request
+from utils.common_util import send_post_request, fetch_zip_codes
 
 BACKEND_URL = "http://127.0.0.1:8000"
-
-
 
 # 1. Fetch baseline country data records once globally
 all_countries = Country.get_countries()
@@ -43,14 +41,14 @@ if st.session_state.current_city not in city_options:
     st.session_state.current_city = city_options[0] if city_options else None
 
 with st.container(key="storm_box"):
-    st.write("### New Customer Details")
-    first_name = st.text_input("first_name", placeholder="e.g. admin")
-    last_name = st.text_input("last_name", placeholder="eg. admin")
+    st.write("### New Vendor Details")
+    vendor_name = st.text_input("Vendor Name", placeholder="e.g. Joshi Bandhu")
+    contact_name = st.text_input("POC Name", placeholder="eg. Chinmay Joshi")
     email = st.text_input("email", placeholder="e.g. admin@example.com")
     phone_number_calling = st.text_input("phone_number_calling", placeholder="e.g. 123-456-7890")
     phone_number_whatsapp = st.text_input("phone_number_whatsapp", placeholder="e.g. 123-456-7890")
-    customer_type = st.selectbox("customer_type", ["Retail", "Wholesale"])
-    customer_mode = st.selectbox("customer_mode", ["Online", "Offline"])
+    # customer_type = st.selectbox("customer_type", ["Retail", "Wholesale"])
+    # customer_mode = st.selectbox("customer_mode", ["Online", "Offline"])
     created_by = st.session_state.get("username", "System")  
     st.text("Address Details")
     # 1. Country Selector Dropdown
@@ -98,16 +96,14 @@ with st.container(key="storm_box"):
     postal_code = st.selectbox("Postal Code / ZIP",options=fetch_zip_codes(st.session_state.current_city), placeholder="444601")
     street = st.text_input("Street Address", key="street_input")
     # Custom form submit action button
-    if st.button("Save Form Profile", type="primary"):
+    if st.button("Save Vendor Details", type="primary"):
         if chosen_country and chosen_state and chosen_city:
             payload = {
-                            "first_name": first_name,
-                            "last_name": last_name,
+                            "vendor_name": vendor_name,
+                            "contact_name": contact_name,
                             "email": email,
                             "phone_number_calling": phone_number_calling,
                             "phone_number_whatsapp": phone_number_whatsapp,
-                            "customer_type":customer_type,
-                            "customer_mode": customer_mode,
                             "created_by": st.session_state.get("username", "System"),
                             "country": chosen_country,
                             "state": chosen_state,
@@ -115,12 +111,12 @@ with st.container(key="storm_box"):
                             "pincode": str(postal_code),
                             "street": street,
                         }
-            res = send_post_request('customer/add_customer',payload)
+            res = send_post_request('vendor/add_vendor',payload)
             if res == 200:
-                st.success("Customer added succefully")
+                st.success("Vendor added successfully")
             else:
-                st.error("Error adding customer")
+                st.error("Error adding vendor")
         else:
             st.error("Please complete all location fields before submitting.")
-    if st.button("View/Update Customers", type="primary"):
-        st.switch_page("views/update_customers.py")
+    # if st.button("View/Update Customers", type="primary"):
+    #     st.switch_page("views/update_customers.py")
