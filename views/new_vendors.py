@@ -118,5 +118,5 @@ with st.container(key="storm_box"):
                 st.error("Error adding vendor")
         else:
             st.error("Please complete all location fields before submitting.")
-    # if st.button("View/Update Customers", type="primary"):
-    #     st.switch_page("views/update_customers.py")
+    if st.button("View/Update Vendors", type="primary"):
+        st.switch_page("views/update_vendors.py")
