@@ -8,7 +8,7 @@ with st.expander("Choose appropriate action", expanded = True):
       if st.button("Manage Customers", use_container_width=True):
           st.switch_page("views/customers.py")
       if st.button("Manage Vendors", use_container_width=True):
-           st.switch_page("views/new_vendors.py")
+           st.switch_page("views/vendors.py")
 
 # with col2:
 #     if st.button("🧾 View Customer Orders", use_container_width=True):
