@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
-from country_state_city import Country, State, City
+from country_state_city import Country, State, Citycity
 import time
 from utils.common_util import circular_spinner, fetch_zip_codes, send_post_request
 
@@ -14,35 +14,35 @@ all_countries = Country.get_countries()
 country_map = {c.name: c.iso2 for c in all_countries}
 country_names = sorted(list(country_map.keys()))
 # 2. Initialize explicit data storage arrays inside Streamlit's engine
-if "current_vendor_country" not in st.session_state:
-    st.session_state.current_vendor_country = vendors_df['country'].values[0] if vendors_df is not None and not vendors_df['country'].isna().all() else 'India'
-if "current_vendor_state" not in st.session_state:
-    st.session_state.current_vendor_state = vendors_df['state'].values[0] if vendors_df is not None and not vendors_df['state'].isna().all() else 'Maharashtra'
-if "current_vendor_city" not in st.session_state:
-    st.session_state.current_vendor_city =  vendors_df['city'].values[0] if vendors_df is not None and not vendors_df['city'].isna().all() else 'Pune'
-if 'current_vendor_pincode' not in st.session_state:
-    st.session_state.current_vendor_pincode = vendors_df['pincode'].values[0] if vendors_df is not None and not vendors_df['pincode'].isna().all() else '415605'
+if "current_update_vendor_country" not in st.session_state:
+    st.session_state.current_update_vendor_country = vendors_df['country'].values[0] if vendors_df is not None and not vendors_df['country'].isna().all() else 'India'
+if "current_update_vendor_state" not in st.session_state:
+    st.session_state.current_update_vendor_state = vendors_df['state'].values[0] if vendors_df is not None and not vendors_df['state'].isna().all() else 'Maharashtra'
+if "current_update_vendor_city" not in st.session_state:
+    st.session_state.current_update_vendor_city =  vendors_df['city'].values[0] if vendors_df is not None and not vendors_df['city'].isna().all() else 'Pune'
+if 'current_update_vendor_pincode' not in st.session_state:
+    st.session_state.current_update_vendor_pincode = vendors_df['pincode'].values[0] if vendors_df is not None and not vendors_df['pincode'].isna().all() else '415605'
 
 # --- PROCESS LIVE CASCADING LOGIC OUTSIDE FORM RESTRICTIONS ---
 # A. Get Active States matching chosen country
-active_country_iso = country_map[st.session_state.current_vendor_country]
+active_country_iso = country_map[st.session_state.current_update_vendor_country]
 all_states = State.get_states_of_country(active_country_iso)
 state_map = {s.name: s.iso_code for s in all_states} if all_states else {}
 state_options = sorted(list(state_map.keys()))
 
 # Ensure selected state is valid for the current country list
-if st.session_state.current_vendor_state not in state_options:
-    st.session_state.current_vendor_state = state_options[0] if state_options else None
+if st.session_state.current_update_vendor_state not in state_options:
+    st.session_state.current_update_vendor_state = state_options[0] if state_options else None
 
 # B. Get Active Cities matching chosen state
 city_options = []
-if st.session_state.current_vendor_state and state_map:
-    active_state_iso = state_map[st.session_state.current_vendor_state]
+if st.session_state.current_update_vendor_state and state_map:
+    active_state_iso = state_map[st.session_state.current_update_vendor_state]
     all_cities = City.get_cities_of_state(active_country_iso, active_state_iso)
     city_options = sorted([c.name for c in all_cities]) if all_cities else []
 
-if st.session_state.current_vendor_city not in city_options:
-    st.session_state.current_vendor_city = city_options[0] if city_options else None
+if st.session_state.current_update_vendor_city not in city_options:
+    st.session_state.current_update_vendor_city = city_options[0] if city_options else None
 
 
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Update Vendor </h2>",unsafe_allow_html=True)
@@ -75,18 +75,18 @@ if vendors_df is not None:
                 chosen_country = st.selectbox(
                     "Select Country",
                     options=country_names,
-                    index=country_names.index(st.session_state.current_vendor_country),
+                    index=country_names.index(st.session_state.current_update_vendor_country),
                     key="ui_country_node"
                 )
                 # Check for direct update
-                if chosen_country != st.session_state.current_vendor_country:
-                    st.session_state.current_vendor_country = chosen_country
-                    st.session_state.current_vendor_state = None  # Force child reset
-                    st.session_state.current_vendor_city = None
+                if chosen_country != st.session_state.current_update_vendor_country:
+                    st.session_state.current_update_vendor_country = chosen_country
+                    st.session_state.current_update_vendor_state = None  # Force child reset
+                    st.session_state.current_update_vendor_city = None
                     st.rerun()
 
                 # 2. State Selector Dropdown
-                state_index = state_options.index(st.session_state.current_vendor_state) if st.session_state.current_vendor_state else 0
+                state_index = state_options.index(st.session_state.current_update_vendor_state) if st.session_state.current_update_vendor_state else 0
                 chosen_state = st.selectbox(
                     "Select State",
                     options=state_options,
@@ -95,13 +95,13 @@ if vendors_df is not None:
                     key="ui_state_node",
                 )
                 # Check for direct update
-                if chosen_state != st.session_state.current_vendor_state:
-                    st.session_state.current_vendor_state = chosen_state
-                    st.session_state.current_vendor_city = None  # Force child reset
+                if chosen_state != st.session_state.current_update_vendor_state:
+                    st.session_state.current_update_vendor_state = chosen_state
+                    st.session_state.current_update_vendor_city = None  # Force child reset
                     st.rerun()
 
                 # 3. City Selector Dropdown
-                city_index = city_options.index(st.session_state.current_vendor_city) if st.session_state.current_vendor_city else 0
+                city_index = city_options.index(st.session_state.current_update_vendor_city) if st.session_state.current_update_vendor_city else 0
                 chosen_city = st.selectbox(
                     "Select City",
                     options=city_options,
@@ -109,11 +109,11 @@ if vendors_df is not None:
                     disabled=not city_options,
                     key="ui_city_node",
                 )
-                if chosen_city != st.session_state.current_vendor_city:
-                    st.session_state.current_vendor_city = chosen_city
+                if chosen_city != st.session_state.current_update_vendor_city:
+                    st.session_state.current_update_vendor_city = chosen_city
 
-                all_zip_codes = fetch_zip_codes(st.session_state.current_vendor_city)
-                postal_code = st.selectbox("Postal Code / ZIP",options=all_zip_codes, index = all_zip_codes.index(int(st.session_state.current_vendor_pincode)),key="ui_zip_node")
+                all_zip_codes = fetch_zip_codes(st.session_state.current_update_vendor_city)
+                postal_code = st.selectbox("Postal Code / ZIP",options=all_zip_codes, index = all_zip_codes.index(int(st.session_state.current_update_vendor_pincode)),key="ui_zip_node")
                 street = st.text_input("Street Address", key="street_input", value=vendors_df['street'].values[0] if not vendors_df['street'].isna().all() else "")
                 
                 
@@ -147,7 +147,7 @@ if vendors_df is not None:
                         st.success("Vendor updated successfully! Navigating to view page...")
                         time.sleep(3)
                         st.session_state.vendors_df = None
-                        st.switch_page("views/view_vendors.py")
+                        st.switch_page("views/Vendors/view_vendors.py")
                     else :
                         st.error ("Could not update vendor")
             else:
@@ -180,9 +180,9 @@ if vendors_df is not None:
                         st.success("Vendor updated successfully! Navigating to view page...")
                         time.sleep(3)
                         st.session_state.vendors_df = None
-                        st.switch_page("views/view_vendors.py")
+                        st.switch_page("views/Vendors/view_vendors.py")
                     else:
                         st.error("Could not update vendor")
             if st.button("Go Back to View Page"):
                 st.session_state.vendors_df = None
-                st.switch_page("views/view_vendors.py")
+                st.switch_page("views/Vendors/view_vendors.py")

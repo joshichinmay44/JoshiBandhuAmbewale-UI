@@ -85,17 +85,19 @@ set_custom_background("assets/logo.png")
 # --- MULTI-PAGE ROUTING LAYER ---
 # Declare sub-page views targeting isolated python files inside the layout directory 
 login_page = st.Page("views/login.py", title="Log In", icon="🔒")
-dash_page = st.Page("views/dashboard.py", title="Dashboard", icon="📊")
+dash_page = st.Page("views/Dashboard/dashboard.py", title="Dashboard", icon="📊")
 landing_page = st.Page("views/landing.py", title="Home", icon="📦")
-customers_page = st.Page("views/customers.py", title="Customers", icon="👥")
-new_customer_page = st.Page("views/new_customers.py", title="Add Customer",  visibility="hidden", icon="➕")
-update_customers_page = st.Page("views/update_customers.py", title="Update Customer", visibility="hidden", icon="✏️")
-view_customers_page = st.Page("views/view_customers.py", title="View Customers", visibility="hidden", icon="👁️")
-registration_page = st.Page("views/register_admin.py", title="Register Admin", icon="📝")
-vendors_page = st.Page("Views/vendors.py", title="Vendors", icon = ":material/storefront:")
-new_vendors_page = st.Page("Views/new_vendors.py", title = "Add Vendor",  visibility = "hidden")
-update_vendors_page = st.Page("Views/update_vendors.py", visibility= "hidden")
-view_vendors_page = st.Page("Views/view_vendors.py", title = "View Vendors", visibility = "hidden")
+customers_page = st.Page("views/Customers/customers.py", title="Customers", icon="👥")
+new_customer_page = st.Page("views/Customers/new_customers.py", title="Add Customer",  visibility="hidden", icon="➕")
+update_customers_page = st.Page("views/Customers/update_customers.py", title="Update Customer", visibility="hidden", icon="✏️")
+view_customers_page = st.Page("views/Customers/view_customers.py", title="View Customers", visibility="hidden", icon="👁️")
+registration_page = st.Page("views/Admin/register_admin.py", title="Register Admin", icon="📝")
+vendors_page = st.Page("views/Vendors/vendors.py", title="Vendors", icon = ":material/storefront:")
+new_vendors_page = st.Page("views/Vendors/new_vendors.py", title = "Add Vendor",  visibility = "hidden")
+update_vendors_page = st.Page("views/Vendors/update_vendors.py", visibility= "hidden")
+view_vendors_page = st.Page("views/Vendors/view_vendors.py", title = "View Vendors", visibility = "hidden")
+add_sku_page = st.Page("views/Inventory/add_new_sku.py", title="Add SKU", visibility="hidden")
+view_sku_page = st.Page("views/Inventory/view_skus.py", title="View SKUs", visibility="hidden")
 # (Keep your existing background configurations at the top of your app.py file)
 
 # Enforce route visualization mapping based on current login authentication checks
@@ -111,7 +113,7 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [landing_page , dash_page, customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page],
+        "Admin Controls": [landing_page,  customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page, dash_page],
     }, position="sidebar")
 
 

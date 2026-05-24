@@ -3,8 +3,7 @@ import requests
 import pandas as pd
 from country_state_city import Country, State, City
 import time
-from utils.common_util import circular_spinner, fetch_zip_codes, send_post_request
-import numpy as np
+from utils.common_util import circular_spinner
 
 BACKEND_URL = "http://127.0.0.1:8000"
 
@@ -38,7 +37,7 @@ def customer_selection():
     
     if selection.selection.rows:
         st.session_state.customers_df = selected_row
-        st.switch_page("Views/update_customers.py")
+        st.switch_page("Views/Customers/update_customers.py")
 
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Select Customer to edit </h2>",unsafe_allow_html=True)
 data_area = st.empty()

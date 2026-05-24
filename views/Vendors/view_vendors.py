@@ -35,7 +35,7 @@ def vendor_selection():
     
     if selection.selection.rows:
         st.session_state.vendors_df = vendors_df
-        st.switch_page("Views/update_vendors.py")
+        st.switch_page("Views/Vendors/update_vendors.py")
 
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Select Vendor to edit </h2>",unsafe_allow_html=True)
 data_area = st.empty()
