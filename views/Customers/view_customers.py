@@ -16,7 +16,7 @@ def get_customers():
             response = response.json().get("customers", [])
             customers_df= pd.DataFrame(response,columns=[
             "id", "first_name", "last_name", "email", "phone_number_calling", "phone_number_whatsapp", "customer_type", "customer_mode","country", "state", "city", "pincode", "street", "created_at", "updated_at", "created_by", "updated_by"
-        ])
+        ]).sort_values(by="id", ascending=True, ignore_index=True)
             return customers_df
         else:
             raise Exception(f"Failed to fetch customers: {response.text}")

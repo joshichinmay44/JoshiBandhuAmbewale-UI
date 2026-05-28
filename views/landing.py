@@ -9,6 +9,8 @@ with st.expander("Choose appropriate action", expanded = True):
           st.switch_page("views/Customers/customers.py")
       if st.button("Manage Vendors", use_container_width=True):
            st.switch_page("views/Vendors/vendors.py")
+      if st.button("View Inventory", use_container_width=True):
+           st.switch_page("views/Inventory/inventory.py")
 
 # with col2:
 #     if st.button("🧾 View Customer Orders", use_container_width=True):

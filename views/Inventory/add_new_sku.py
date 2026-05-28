@@ -10,20 +10,22 @@ def add_sku_form():
         st.write("### New Vendor Details")
         sku_name = st.text_input("SKU Name", placeholder="e.g. 2.5 dozen")
         description = st.text_input("Description", placeholder="eg. 30 mangoes packed in a box")
-        if st.button("Save Vendor Details", type="primary"):
+        if st.button("Save SKU Details", type="primary"):
             payload = {
                             "sku_name": sku_name,
-                            "description": description
+                            "description": description,
+                            "created_by": st.session_state.username
                         }
             res = send_post_request('sku/add_sku',payload)
             if res == 200:
                 st.success("SKU added successfully")
             else:
-                st.error("Error adding SKU")
+                st.error(f"Failed to add SKU. Please try again. Error: {res}")
         else:
-            st.error("Please complete all location fields before submitting.")
+            if not sku_name or not description:
+                st.error("Please complete all location fields before submitting.")
         if st.button("View/Update SKUs", type="primary"):
-            st.switch_page("views/Inventory/view_skus.py")
+            st.switch_page("views/Inventory/view_sku.py")
 
 
 add_sku_form()

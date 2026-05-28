@@ -16,7 +16,7 @@ def get_vendors():
             response = response.json().get("vendors", [])
             vendors_df= pd.DataFrame(response,columns=[
             "id", "vendor_name", "contact_name", "email", "phone_number_calling", "phone_number_whatsapp","country", "state", "city", "pincode", "street", "created_at", "updated_at", "created_by", "updated_by"
-        ])
+        ]).sort_values(by="id", ascending=True, ignore_index=True)
             return vendors_df
         else:
             raise Exception(f"Failed to fetch vendors: {response.text}")

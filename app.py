@@ -97,9 +97,9 @@ new_vendors_page = st.Page("views/Vendors/new_vendors.py", title = "Add Vendor",
 update_vendors_page = st.Page("views/Vendors/update_vendors.py", visibility= "hidden")
 view_vendors_page = st.Page("views/Vendors/view_vendors.py", title = "View Vendors", visibility = "hidden")
 add_sku_page = st.Page("views/Inventory/add_new_sku.py", title="Add SKU", visibility="hidden")
-view_sku_page = st.Page("views/Inventory/view_skus.py", title="View SKUs", visibility="hidden")
-# (Keep your existing background configurations at the top of your app.py file)
-
+view_sku_page = st.Page("views/Inventory/view_sku.py", visibility="hidden", title="SKUs")
+inventory_page = st.Page("views/Inventory/inventory.py", title="Inventory", icon="📦")
+update_sku_page = st.Page("views/Inventory/update_sku.py", visibility="hidden", title="Update SKU")
 # Enforce route visualization mapping based on current login authentication checks
 if not st.session_state.logged_in:
     pg = st.navigation([login_page, registration_page], position="hidden")
@@ -113,7 +113,7 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [landing_page,  customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page, dash_page],
+        "Admin Controls": [landing_page,  customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page,inventory_page, dash_page, view_sku_page, add_sku_page, update_sku_page],
     }, position="sidebar")
 
 

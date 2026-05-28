@@ -13,9 +13,9 @@ def get_sku():
     try:
         response = requests.get(f"{BACKEND_URL}/sku/get_skus")
         if response.status_code == 200:
-            response = response.json().get("vendors", [])
+            response = response.json().get("skus", [])
             sku_df= pd.DataFrame(response,columns=[
-            "id", "sku_name", "description", "created_at", "updated_at", "created_by", "updated_by"])
+            "id", "sku_name", "description", "created_at", "updated_at", "created_by", "updated_by"]).sort_values(by="id", ascending=True, ignore_index=True)
             return sku_df
         else:
             raise Exception(f"Failed to fetch vendors: {response.text}")
@@ -32,8 +32,10 @@ def sku_selection():
             selection_default=None,
         )
     
+    selected_row = sku_df.loc[selection.selection.rows] if selection.selection.rows else None
+    
     if selection.selection.rows:
-        st.session_state.sku_df = sku_df
+        st.session_state.sku_df = selected_row
         st.switch_page("Views/Inventory/update_sku.py")
 
 st.markdown("<h2 style='text-align: center; color: #6B1D1D ;'> Select SKU to edit </h2>",unsafe_allow_html=True)
