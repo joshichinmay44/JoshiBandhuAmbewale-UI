@@ -42,3 +42,33 @@ def send_post_request(sub_domain, payload):
         return response.status_code
     except Exception as e:
         st.error(f"Error occurred while updating customer: {e}")
+
+def get_customers_list():
+    try:
+        response = requests.get(f"{BACKEND_URL}/customer/get_customers")
+        if response.status_code == 200:
+            response = response.json().get("customers", [])
+            if response:
+                customers_list = [f"{customer[1]} {customer[2]}" for customer in response]
+                return customers_list
+            else:
+                return None
+        else:
+            raise Exception(f"Failed to fetch customers: {response.text}")
+    except Exception as e:
+        raise Exception(f"Error occurred while fetching customers: {e}")
+
+def get_sku_list():
+    try:
+        response = requests.get(f"{BACKEND_URL}/sku/get_skus")
+        if response.status_code == 200:
+            response = response.json().get("skus", [])
+            if response:
+                sku_list = [sku[1] for sku in response]
+                return sku_list
+            else:
+                return None
+        else:
+            raise Exception(f"Failed to fetch sku: {response.text}")
+    except Exception as e:
+        raise Exception(f"Error occurred while fetching sku: {e}")

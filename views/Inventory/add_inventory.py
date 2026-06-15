@@ -64,7 +64,7 @@ def add_inventory_form():
         st.write("### Inventory Basket")
         edited_df = st.data_editor(
                 inventory_df,
-                 # Prevent the user from tampering with the primary key ID
+                disabled=["sku_name","vendor_name","total_cost_price"],  # Prevent the user from tampering with the primary key ID
                 hide_index=False,
                 num_rows="dynamic",
                 key="customer_selection"
@@ -74,6 +74,9 @@ def add_inventory_form():
                 {k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in row.items()}
                 for row in edited_df.to_dict('records')
             ]
+            
+            for row in clean_array:
+                row["total_cost_price"] = row["total_units"] * row["unit_cost_price"] if row["total_units"] is not None and row["unit_cost_price"] is not None else 0
             
             st.session_state.inventory_details = clean_array
               # Update session state with edited details
@@ -86,6 +89,8 @@ def add_inventory_form():
             if res == 200:
                 st.session_state.inventory_details = []  # Clear the inventory details after successful submission
                 st.success("Inventory batch added successfully!")
+                time.sleep(3)  # Pause briefly to show success message
+                st.switch_page("views/Inventory/inventory.py")  # Redirect to inventory view page after saving
             else:
                 st.error(f"Failed to add inventory batch. Please try again. Error: {res}")
         

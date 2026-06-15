@@ -1,10 +1,8 @@
 import streamlit as st
-import requests
 import pandas as pd
 from country_state_city import Country, State, City
 import time
 from utils.common_util import circular_spinner, fetch_zip_codes, send_post_request
-import numpy as np
 
 BACKEND_URL = "http://127.0.0.1:8000"
         
