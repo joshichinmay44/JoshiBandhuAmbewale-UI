@@ -104,7 +104,7 @@ add_inventory_page = st.Page("views/Inventory/add_inventory.py", visibility="hid
 update_inventory_page = st.Page("views/Inventory/update_inventory.py", visibility="hidden", title="Current Inventory")
 booking_page = st.Page("views/Sales/booking.py", title="Bookings", icon="📝")
 add_booking_page = st.Page("views/Sales/new_booking.py", title="Add Booking", visibility="hidden")
-
+view_bookings_page = st.Page("views/Sales/view_bookings.py", title="View Bookings", visibility="hidden")
 # Enforce route visualization mapping based on current login authentication checks
 if not st.session_state.logged_in:
     pg = st.navigation([login_page, registration_page], position="hidden")
@@ -118,7 +118,7 @@ else:
         st.rerun() # Instantly locks down the pages and routes user back to login view
 
     pg = st.navigation({
-        "Admin Controls": [landing_page,  customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page,inventory_page, dash_page, view_sku_page, add_sku_page, update_sku_page, add_inventory_page, update_inventory_page, booking_page, add_booking_page],
+        "Admin Controls": [landing_page,  customers_page, new_customer_page, update_customers_page, view_customers_page, vendors_page, new_vendors_page, update_vendors_page, view_vendors_page,inventory_page, dash_page, view_sku_page, add_sku_page, update_sku_page, add_inventory_page, update_inventory_page, booking_page, add_booking_page, view_bookings_page],
     }, position="sidebar")
     st.session_state.inventory_details =[]
 

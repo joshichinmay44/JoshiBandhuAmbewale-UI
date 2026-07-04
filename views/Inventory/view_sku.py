@@ -18,9 +18,9 @@ def get_sku():
             "id", "sku_name", "description", "created_at", "updated_at", "created_by", "updated_by"]).sort_values(by="id", ascending=True, ignore_index=True)
             return sku_df
         else:
-            raise Exception(f"Failed to fetch vendors: {response.text}")
+            raise Exception(f"Failed to fetch skus: {response.text}")
     except Exception as e:
-        raise Exception(f"Error occurred while fetching vendors: {e}")
+        raise Exception(f"Error occurred while fetching skus: {e}")
 
 @st.fragment
 def sku_selection():
