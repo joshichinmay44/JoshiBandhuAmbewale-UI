@@ -13,7 +13,7 @@ def get_bookings():
         if response.status_code == 200:
             response = response.json().get("bookings", [])
             bookings_df = pd.DataFrame(response,columns=[
-            "booking_id", "customer_name", "customer_address", "customer_phone_number_calling", "customer_phone_number_whatsapp", "customer_mode", "customer_type","sku_name","sku_units","booked_quantity_in_doz","sale_booked_by","booking_date"]).sort_values(by="booking_id", ascending=True, ignore_index=True)
+            "booking_id", "customer_name", "sku_name","sku_units","booked_quantity_in_doz" ,"delivery_mode","delivery_address", "customer_phone_number_calling", "customer_phone_number_whatsapp", "customer_type","sale_booked_by","booking_date"]).sort_values(by="booking_id", ascending=True, ignore_index=True)
             return bookings_df
         else:
             raise Exception(f"Failed to fetch bookings: {response.text}")
